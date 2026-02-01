@@ -2,30 +2,22 @@
 # Linux-specific Tailscale installation (Debian/Ubuntu)
 
 - name: Add Tailscale GPG key
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      DIST="{{ ansible_distribution | lower }}"
-      RELEASE="{{ ansible_distribution_release }}"
-      curl -fsSL "https://pkgs.tailscale.com/stable/${DIST}/${RELEASE}.noarmor.gpg" | \
-        tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
-    creates: /usr/share/keyrings/tailscale-archive-keyring.gpg
-    executable: /bin/bash
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg"
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    mode: "0644"
 
 - name: Add Tailscale repository
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      DIST="{{ ansible_distribution | lower }}"
-      RELEASE="{{ ansible_distribution_release }}"
-      curl -fsSL "https://pkgs.tailscale.com/stable/${DIST}/${RELEASE}.tailscale-keyring.list" | \
-        tee /etc/apt/sources.list.d/tailscale.list > /dev/null
-    creates: /etc/apt/sources.list.d/tailscale.list
-    executable: /bin/bash
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    filename: tailscale
+    state: present
+  register: tailscale_repo
 
 - name: Update apt cache after adding Tailscale repo
   ansible.builtin.apt:
     update_cache: true
+  when: tailscale_repo.changed
 
 - name: Install Tailscale
   ansible.builtin.apt:
@@ -44,16 +36,26 @@
   changed_when: false
   failed_when: false
 
+- name: Set Tailscale connection status
+  ansible.builtin.set_fact:
+    tailscale_connected: "{{ (tailscale_status_linux.stdout | from_json).BackendState == 'Running' }}"
+  when: tailscale_status_linux.rc == 0 and tailscale_status_linux.stdout | length > 0
+
+- name: Set Tailscale connection status (fallback)
+  ansible.builtin.set_fact:
+    tailscale_connected: false
+  when: tailscale_status_linux.rc != 0 or tailscale_status_linux.stdout | length == 0
+
 - name: Connect to Tailscale using auth key (Linux)
   ansible.builtin.command: tailscale up --authkey {{ tailscale_authkey }} --ssh
-  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length > 0
+  when: not tailscale_connected and tailscale_authkey | length > 0
   no_log: true
   changed_when: true
 
 - name: Display Tailscale connection status (Linux)
   ansible.builtin.debug:
     msg: "✅ Tailscale connected with SSH enabled"
-  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length > 0
+  when: not tailscale_connected and tailscale_authkey | length > 0
 
 - name: Display Tailscale auth URL if not connected (Linux)
   ansible.builtin.debug:
@@ -69,4 +71,4 @@
       - "sudo tailscale up --authkey tskey-auth-xxxxx --ssh"
       - ""
       - "Get auth key from: https://login.tailscale.com/admin/settings/keys"
-  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length == 0
+  when: not tailscale_connected and tailscale_authkey | length == 0

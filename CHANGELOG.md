@@ -1,5 +1,24 @@
 # Changelog 
 
+## [Unreleased]
+
+### 🔧 Improvements
+
+#### Node.js Installation
+- **Use native Ansible modules**: Replaced shell-based GPG key and repo setup with `get_url` and `apt_repository` modules for better idempotency and change detection
+- **Conditional apt cache update**: Only update apt cache when the NodeSource repository is newly added
+- **Use `community.general.npm` module**: Replaced command-based pnpm installation with the npm module for better idempotency
+
+#### Docker Installation (Linux)
+- **Use native Ansible modules**: Replaced shell-based GPG key and repo setup with `get_url` and `apt_repository` modules for better idempotency and change detection
+- **Conditional apt cache update**: Only update apt cache when the Docker repository is newly added
+- **Architecture mapping**: Added `aarch64` to `arm64` mapping for ARM64 support
+
+#### Tailscale Installation (Linux)
+- **Use native Ansible modules**: Replaced shell-based GPG key and repo setup with `get_url` and `apt_repository` modules for better idempotency and change detection
+- **Improved connection detection**: Parse `tailscale status --json` output to check `BackendState` instead of relying on exit codes
+- **Conditional apt cache update**: Only update apt cache when the Tailscale repository is newly added
+
 ## [0.5.0] - 2026-02-01
 
 ### 🚀 Initial OpenClaw Release
