@@ -32,6 +32,10 @@ clawdbot_gateway_token: ""
 #     - { ip: "10.0.0.0/8", comment: "Internal network" }
 clawdbot_allowed_networks: []
 
+# Auto-start daemon after installation (Linux only, uses systemd)
+# Set to false if you want to manually start the daemon later
+clawdbot_start_daemon: true
+
 # Clawdbot config directory
 clawdbot_config_dir: "{{ clawdbot_home }}/.clawdbot"
 

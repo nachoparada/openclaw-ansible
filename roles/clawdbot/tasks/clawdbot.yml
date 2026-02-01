@@ -115,7 +115,61 @@
     msg: "✅ Gateway config seeded with secure defaults (bind: {{ clawdbot_gateway_bind }}, mode: {{ clawdbot_gateway_mode }})"
   when: clawdbot_seed_gateway_config | bool
 
-- name: Display configuration note
+# Auto-start daemon on Linux (uses systemd)
+- name: Install clawdbot daemon service (Linux)
+  ansible.builtin.shell:
+    cmd: clawdbot daemon install
+    executable: /bin/bash
+  environment:
+    PATH: "{{ clawdbot_path }}"
+    HOME: "{{ clawdbot_home }}"
+    XDG_RUNTIME_DIR: "/run/user/{{ clawdbot_uid_value | default(ansible_user_uid) }}"
+  become: true
+  become_user: "{{ clawdbot_user }}"
+  when: clawdbot_start_daemon | bool and ansible_os_family == 'Debian'
+  register: daemon_install
+  changed_when: daemon_install.rc == 0
+
+- name: Start clawdbot daemon service (Linux)
+  ansible.builtin.shell:
+    cmd: clawdbot daemon start
+    executable: /bin/bash
+  environment:
+    PATH: "{{ clawdbot_path }}"
+    HOME: "{{ clawdbot_home }}"
+    XDG_RUNTIME_DIR: "/run/user/{{ clawdbot_uid_value | default(ansible_user_uid) }}"
+  become: true
+  become_user: "{{ clawdbot_user }}"
+  when: clawdbot_start_daemon | bool and ansible_os_family == 'Debian' and daemon_install is succeeded
+  register: daemon_start
+  changed_when: daemon_start.rc == 0
+  failed_when: false  # Don't fail if daemon start has issues (may need provider config)
+
+- name: Display daemon status
+  ansible.builtin.debug:
+    msg: "✅ Clawdbot daemon installed and started"
+  when: clawdbot_start_daemon | bool and ansible_os_family == 'Debian' and daemon_install is succeeded
+
+- name: Display configuration note (daemon started)
+  ansible.builtin.debug:
+    msg: |
+      ✅ Clawdbot is installed and daemon is running.
+
+      Next steps (run as clawdbot user):
+      1. Switch user: sudo su - clawdbot
+      2. Run onboarding: clawdbot onboard
+
+      This will:
+      • Guide you through provider setup
+      • Configure your messaging providers
+
+      Daemon commands:
+      • clawdbot daemon status
+      • clawdbot daemon restart
+      • clawdbot logs
+  when: clawdbot_start_daemon | bool and ansible_os_family == 'Debian'
+
+- name: Display configuration note (manual setup)
   ansible.builtin.debug:
     msg: |
       ℹ️  Clawdbot is installed but NOT configured yet.
@@ -128,3 +182,4 @@
       • Create configuration files (~/.clawdbot/clawdbot.json)
       • Guide you through provider setup
       • Install and start the daemon service automatically
+  when: not (clawdbot_start_daemon | bool and ansible_os_family == 'Debian')

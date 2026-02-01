@@ -203,6 +203,15 @@ These variables only apply when `clawdbot_install_mode: development`
     - { ip: "10.0.0.0/8", comment: "Internal network" }
   ```
 
+#### `clawdbot_start_daemon`
+- **Type**: Boolean
+- **Default**: `true`
+- **Description**: Automatically install and start the clawdbot daemon service after installation (Linux only, uses systemd). Set to `false` if you prefer to start the daemon manually via `clawdbot daemon install && clawdbot daemon start`.
+- **Example**:
+  ```bash
+  -e clawdbot_start_daemon=false
+  ```
+
 ### Node.js Configuration
 
 #### `nodejs_version`

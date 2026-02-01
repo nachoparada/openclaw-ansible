@@ -52,24 +52,32 @@ ansible-playbook playbook.yml --ask-become-pass -e clawdbot_install_mode=develop
 
 ## Post-Install
 
-After installation completes, switch to the clawdbot user:
+On Linux, the daemon is automatically installed and started after installation (controlled by `clawdbot_start_daemon`, default: `true`).
+
+Switch to the clawdbot user:
 
 ```bash
 sudo su - clawdbot
 ```
 
-Then run the quick-start onboarding wizard:
+Then run the onboarding wizard to configure your providers:
 
 ```bash
-clawdbot onboard --install-daemon
+clawdbot onboard
 ```
 
 This will:
 - Guide you through the setup wizard
 - Configure your messaging provider (WhatsApp/Telegram/Signal)
-- Install and start the daemon service
 
-### Alternative Manual Setup
+Check daemon status:
+
+```bash
+clawdbot daemon status
+clawdbot logs
+```
+
+### Alternative Manual Setup (or macOS)
 
 ```bash
 # Configure manually
