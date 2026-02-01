@@ -12,7 +12,7 @@ if [ -z "$COLORTERM" ]; then
     export COLORTERM=truecolor
 fi
 
-REPO_URL="https://raw.githubusercontent.com/openclaw/openclaw-ansible/main"
+REPO_URL="https://raw.githubusercontent.com/nachoparada/openclaw-ansible/main"
 PLAYBOOK_URL="${REPO_URL}/playbook.yml"
 TEMP_DIR=$(mktemp -d)
 
@@ -76,7 +76,7 @@ cd "$TEMP_DIR"
 
 # For simplicity, we'll clone the entire repo
 echo "Cloning repository..."
-git clone https://github.com/openclaw/openclaw-ansible.git
+git clone https://github.com/nachoparada/openclaw-ansible.git
 cd openclaw-ansible
 
 echo -e "${GREEN}✓ Playbook downloaded${NC}"

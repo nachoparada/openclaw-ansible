@@ -7,8 +7,25 @@ description: Detailed installation and configuration instructions
 
 ## Quick Install
 
+### Recommended (Clone and Run)
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
+git clone https://github.com/nachoparada/openclaw-ansible.git
+cd openclaw-ansible
+
+./run-playbook.sh
+```
+
+Pass variables as needed:
+
+```bash
+./run-playbook.sh -e tailscale_authkey=tskey-auth-xxxxx
+```
+
+### Defaults Only (One-Liner)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nachoparada/openclaw-ansible/main/install.sh | bash
 ```
 
 ## Manual Installation

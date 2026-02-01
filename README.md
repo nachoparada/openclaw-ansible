@@ -22,10 +22,27 @@ Automated, hardened installation of [OpenClaw](https://github.com/openclaw/openc
 
 ### Release Mode (Recommended)
 
-Install the latest stable version from npm:
+Clone and run the installer so you can pass variables:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
+git clone https://github.com/nachoparada/openclaw-ansible.git
+cd openclaw-ansible
+
+./run-playbook.sh
+```
+
+Need to override defaults? Pass vars on the command line:
+
+```bash
+./run-playbook.sh -e tailscale_authkey=tskey-auth-xxxxx
+```
+
+### Quick Install (Defaults Only)
+
+Use the one-liner if you are fine with defaults and no variable overrides:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nachoparada/openclaw-ansible/main/install.sh | bash
 ```
 
 ### Development Mode
@@ -33,12 +50,10 @@ curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/inst
 Install from source for development or testing:
 
 ```bash
-# Clone the installer
-git clone https://github.com/openclaw/openclaw-ansible.git
+git clone https://github.com/nachoparada/openclaw-ansible.git
 cd openclaw-ansible
 
-# Install in development mode
-ansible-playbook playbook.yml --ask-become-pass -e openclaw_install_mode=development
+./run-playbook.sh -e openclaw_install_mode=development
 ```
 
 ## What Gets Installed

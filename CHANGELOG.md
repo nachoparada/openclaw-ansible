@@ -4,6 +4,10 @@
 
 ### 🔧 Improvements
 
+#### Installer and Docs
+- **Align install URLs**: Use `nachoparada/openclaw-ansible` consistently in `install.sh`
+- **Clarify install methods**: Recommend clone-and-run for variable overrides, keep one-liner for defaults only
+
 #### Node.js Installation
 - **Use native Ansible modules**: Replaced shell-based GPG key and repo setup with `get_url` and `apt_repository` modules for better idempotency and change detection
 - **Conditional apt cache update**: Only update apt cache when the NodeSource repository is newly added
