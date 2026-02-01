@@ -1,3 +1,80 @@
+# Upgrade Notes
+
+## Version 3.0.0 - OpenClaw Rebrand
+
+### Summary
+
+This release completes the rebrand from ClawdBot to OpenClaw. All commands, paths, variables, and documentation have been updated.
+
+### Key Changes
+
+| Old (ClawdBot) | New (OpenClaw) |
+|----------------|----------------|
+| `clawdbot` CLI | `openclaw` CLI |
+| `~/.clawdbot/` | `~/.openclaw/` |
+| `clawdbot.json` | `openclaw.json` |
+| `clawdbot daemon install` | `openclaw gateway install` |
+| `clawdbot daemon start` | `openclaw gateway start` |
+| `clawdbot providers login` | `openclaw channels login` |
+| `github.com/clawdbot/clawdbot` | `github.com/openclaw/openclaw` |
+| `docs.clawd.bot` | `docs.openclaw.ai` |
+
+### Variable Changes
+
+All Ansible variables have been renamed from `clawdbot_*` to `openclaw_*`:
+
+```yaml
+# Old
+clawdbot_user: clawdbot
+clawdbot_home: /home/clawdbot
+clawdbot_install_mode: release
+
+# New
+openclaw_user: openclaw
+openclaw_home: /home/openclaw
+openclaw_install_mode: release
+```
+
+### Migration from ClawdBot
+
+If you have an existing ClawdBot installation:
+
+```bash
+# 1. Stop the old daemon
+sudo su - clawdbot
+clawdbot daemon stop
+exit
+
+# 2. Remove old installation
+sudo userdel -r clawdbot
+
+# 3. Run new OpenClaw installer
+curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
+
+# 4. Configure OpenClaw
+sudo su - openclaw
+openclaw onboard --install-daemon
+```
+
+### Files Changed
+
+#### Renamed Files
+- `roles/clawdbot/` → `roles/openclaw/`
+- `tasks/clawdbot.yml` → `tasks/openclaw.yml`
+- `tasks/clawdbot-release.yml` → `tasks/openclaw-release.yml`
+- `tasks/clawdbot-development.yml` → `tasks/openclaw-development.yml`
+- `templates/clawdbot-host.service.j2` → `templates/openclaw-gateway.service.j2`
+- `templates/clawdbot-config.yml.j2` → `templates/openclaw-config.yml.j2`
+- `files/clawdbot-setup.sh` → `files/openclaw-setup.sh`
+
+#### Updated Content
+- All `.yml` files - variable names and CLI commands
+- All `.md` files - documentation and URLs
+- All `.sh` files - branding and commands
+- All `.j2` files - template variables
+
+---
+
 # Upgrade Notes - Option A Implementation
 
 ## ✅ Completed Changes
