@@ -1,15 +1,37 @@
 ---
 title: Security Architecture
-description: Firewall configuration and Docker isolation details
+description: Firewall configuration, SSH hardening, and Docker isolation details
 ---
 
 # Security Architecture
 
 ## Overview
 
-This playbook implements a 4-layer defense strategy to ensure only SSH (port 22) is accessible from the internet.
+This playbook implements a multi-layer defense strategy to ensure only SSH (port 22) is accessible from the internet.
 
-## Layer 1: UFW Firewall
+## SSH Hardening (Linux)
+
+On Linux systems, the playbook automatically hardens SSH configuration:
+
+- **Password authentication disabled**: Only SSH key authentication is allowed
+- **Root login disabled**: Direct root SSH access is blocked
+
+**Important**: Before running this playbook, ensure you have:
+
+1. Configured your SSH keys in the `clawdbot_ssh_keys` variable
+2. Tested SSH key access to avoid being locked out
+
+```yaml
+# Example: Configure SSH keys before running
+clawdbot_ssh_keys:
+  - "ssh-ed25519 AAAAC3... user@host"
+```
+
+**Note**: SSH hardening only runs on Debian-based Linux systems (Ubuntu, Debian).
+
+## Firewall and Network Security
+
+### Layer 1: UFW Firewall
 
 ```bash
 # Default policies

@@ -19,3 +19,7 @@
 
 - name: Include Clawdbot setup tasks
   ansible.builtin.include_tasks: clawdbot.yml
+
+- name: Include SSH hardening tasks (Linux only)
+  ansible.builtin.include_tasks: ssh-hardening.yml
+  when: ansible_os_family == 'Debian'
