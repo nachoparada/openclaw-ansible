@@ -93,23 +93,45 @@ curl http://YOUR_SERVER_IP:80  # Should fail/timeout
 curl http://localhost:80        # Should work
 ```
 
+## Gateway Security
+
+By default, the Clawdbot gateway is configured with secure defaults:
+
+- **Loopback binding**: Gateway binds to 127.0.0.1, not accessible from network
+- **Tailscale Serve**: Access gateway securely via Tailscale with HTTPS
+
+### Configuration Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `clawdbot_gateway_bind` | `loopback` | Bind to 127.0.0.1 (secure) or 0.0.0.0 (network) |
+| `clawdbot_gateway_mode` | `local` | `local` for localhost only, `network` for network access |
+| `clawdbot_gateway_tailscale_mode` | `serve` | Use Tailscale Serve for secure HTTPS access |
+
+### Why Loopback Binding?
+
+Binding to loopback (127.0.0.1) ensures the gateway is never directly accessible from the network, even if firewall rules are misconfigured. Access is only possible via:
+
+1. **SSH tunnel** (port forwarding)
+2. **Tailscale Serve** (recommended - provides HTTPS)
+
 ## Tailscale Access
 
-Clawdbot's web interface (port 3000) is bound to localhost. Access it via:
+Clawdbot's gateway (port {{ clawdbot_gateway_port | default(18789) }}) is bound to localhost. Access it via:
 
 1. **SSH tunnel**:
    ```bash
-   ssh -L 3000:localhost:3000 user@server
-   # Then browse to http://localhost:3000
+   ssh -L 18789:localhost:18789 user@server
+   # Then browse to http://localhost:18789
    ```
 
-2. **Tailscale** (recommended):
+2. **Tailscale Serve** (recommended):
    ```bash
-   # On server: already done by playbook
-   sudo tailscale up
+   # Expose via Tailscale Serve (HTTPS)
+   tailscale serve https / http://localhost:18789
    
-   # From your machine:
-   # Browse to http://TAILSCALE_IP:3000
+   # Access from any device on your Tailnet:
+   # https://your-machine-name.your-tailnet.ts.net/
    ```
 
 ## Network Flow

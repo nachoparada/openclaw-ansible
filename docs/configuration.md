@@ -156,6 +156,33 @@ These variables only apply when `clawdbot_install_mode: development`
   -e clawdbot_config_dir=/etc/clawdbot
   ```
 
+### Gateway Configuration
+
+#### `clawdbot_gateway_mode`
+- **Type**: String (`local` or `network`)
+- **Default**: `local`
+- **Description**: Gateway access mode. `local` restricts to localhost, `network` allows network access.
+
+#### `clawdbot_gateway_bind`
+- **Type**: String (`loopback` or `all`)
+- **Default**: `loopback`
+- **Description**: Network interface binding. `loopback` binds to 127.0.0.1, `all` binds to 0.0.0.0.
+
+#### `clawdbot_gateway_tailscale_mode`
+- **Type**: String (`serve` or `direct`)
+- **Default**: `serve`
+- **Description**: How to expose gateway via Tailscale. `serve` uses Tailscale Serve for HTTPS, `direct` uses direct port access.
+
+#### `clawdbot_seed_gateway_config`
+- **Type**: Boolean
+- **Default**: `true`
+- **Description**: Whether to create a default gateway configuration file with secure defaults.
+
+#### `clawdbot_gateway_port`
+- **Type**: Integer
+- **Default**: `18789`
+- **Description**: Port for the Clawdbot gateway service.
+
 ### Node.js Configuration
 
 #### `nodejs_version`

@@ -75,6 +75,32 @@
 # We also do NOT install the systemd service - clawdbot onboard --install-daemon will do that
 # The .clawdbot directory structure is created above, but config and daemon are user-initiated
 
+# Seed gateway configuration with secure defaults
+- name: Seed gateway configuration file
+  ansible.builtin.copy:
+    dest: "{{ clawdbot_config_dir }}/clawdbot.json"
+    owner: "{{ clawdbot_user }}"
+    group: "{{ clawdbot_user }}"
+    mode: '0600'
+    force: false  # Don't overwrite if exists
+    content: |
+      {
+        "gateway": {
+          "mode": "{{ clawdbot_gateway_mode }}",
+          "bind": "{{ '127.0.0.1' if clawdbot_gateway_bind == 'loopback' else '0.0.0.0' }}",
+          "port": {{ clawdbot_gateway_port }},
+          "tailscale": {
+            "mode": "{{ clawdbot_gateway_tailscale_mode }}"
+          }
+        }
+      }
+  when: clawdbot_seed_gateway_config | bool
+
+- name: Display gateway configuration status
+  ansible.builtin.debug:
+    msg: "✅ Gateway config seeded with secure defaults (bind: {{ clawdbot_gateway_bind }}, mode: {{ clawdbot_gateway_mode }})"
+  when: clawdbot_seed_gateway_config | bool
+
 - name: Display configuration note
   ansible.builtin.debug:
     msg: |

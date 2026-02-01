@@ -10,6 +10,18 @@ nodejs_version: "22.x"
 # Clawdbot settings
 clawdbot_port: 3000
 
+# Gateway configuration
+# mode: "local" (localhost only), "network" (accessible from network)
+clawdbot_gateway_mode: "local"
+# bind: "loopback" (127.0.0.1), "all" (0.0.0.0)
+clawdbot_gateway_bind: "loopback"
+# Tailscale mode: "serve" (use Tailscale Serve), "direct" (direct port access)
+clawdbot_gateway_tailscale_mode: "serve"
+# Whether to seed the gateway config file
+clawdbot_seed_gateway_config: true
+# Gateway port
+clawdbot_gateway_port: 18789
+
 # Clawdbot config directory
 clawdbot_config_dir: "{{ clawdbot_home }}/.clawdbot"
 
