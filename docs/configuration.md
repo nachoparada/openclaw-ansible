@@ -223,6 +223,25 @@ These are automatically set based on the detected OS:
 - **Description**: System package manager
 - **Read-only**: Set automatically based on OS
 
+### PATH Configuration (Advanced)
+
+These variables provide consistent PATH configuration across tasks. Generally, you don't need to modify these.
+
+#### `clawdbot_path_homebrew`
+- **Type**: String (Path)
+- **Default**: `{{ homebrew_prefix }}/bin`
+- **Description**: Path to Homebrew binaries
+
+#### `clawdbot_path_minimal`
+- **Type**: String (Path)
+- **Default**: `/usr/local/bin:/usr/bin:/bin`
+- **Description**: Minimal system PATH
+
+#### `clawdbot_path`
+- **Type**: String (Path)
+- **Default**: Combined path including local bin, pnpm, Homebrew, and system paths
+- **Description**: Full PATH used for clawdbot tasks
+
 ### System Settings
 
 #### `timezone`
