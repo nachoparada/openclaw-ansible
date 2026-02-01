@@ -30,6 +30,16 @@
     proto: udp
     comment: 'Tailscale'
 
+- name: Allow gateway port from trusted networks
+  community.general.ufw:
+    rule: allow
+    port: "{{ clawdbot_gateway_port }}"
+    proto: tcp
+    from_ip: "{{ item.ip }}"
+    comment: "Clawdbot Gateway - {{ item.comment | default('trusted network') }}"
+  loop: "{{ clawdbot_allowed_networks }}"
+  when: clawdbot_allowed_networks | length > 0
+
 - name: Get default network interface
   ansible.builtin.shell:
     cmd: |

@@ -24,6 +24,14 @@ clawdbot_gateway_port: 18789
 # Gateway authentication token (leave empty to auto-generate)
 clawdbot_gateway_token: ""
 
+# Allowed networks for gateway access (Linux UFW firewall)
+# List of IP/CIDR ranges to allow gateway port access from
+# Example:
+#   clawdbot_allowed_networks:
+#     - { ip: "192.168.1.0/24", comment: "Home network" }
+#     - { ip: "10.0.0.0/8", comment: "Internal network" }
+clawdbot_allowed_networks: []
+
 # Clawdbot config directory
 clawdbot_config_dir: "{{ clawdbot_home }}/.clawdbot"
 

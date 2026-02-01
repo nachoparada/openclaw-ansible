@@ -192,6 +192,17 @@ These variables only apply when `clawdbot_install_mode: development`
   -e clawdbot_gateway_token=your-custom-token-here
   ```
 
+#### `clawdbot_allowed_networks`
+- **Type**: List of objects (ip, comment)
+- **Default**: `[]` (empty - no network access)
+- **Description**: List of IP/CIDR ranges to allow gateway port access from via UFW firewall (Linux only). Each entry should have an `ip` field and optional `comment` field.
+- **Example**:
+  ```yaml
+  clawdbot_allowed_networks:
+    - { ip: "192.168.1.0/24", comment: "Home network" }
+    - { ip: "10.0.0.0/8", comment: "Internal network" }
+  ```
+
 ### Node.js Configuration
 
 #### `nodejs_version`

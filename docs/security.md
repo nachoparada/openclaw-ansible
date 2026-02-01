@@ -123,6 +123,19 @@ Binding to loopback (127.0.0.1) ensures the gateway is never directly accessible
 1. **SSH tunnel** (port forwarding)
 2. **Tailscale Serve** (recommended - provides HTTPS)
 
+### Network-Based Access Control
+
+If you need direct network access to the gateway (not recommended for public networks), you can configure `clawdbot_allowed_networks` to allow specific IP ranges through the UFW firewall:
+
+```yaml
+# Example: Allow access from trusted networks
+clawdbot_allowed_networks:
+  - { ip: "192.168.1.0/24", comment: "Home network" }
+  - { ip: "10.100.0.0/16", comment: "Tailscale network" }
+```
+
+**Important**: Even with network access enabled, the gateway still requires the authentication token for API requests.
+
 ## Tailscale Access
 
 Clawdbot's gateway (port {{ clawdbot_gateway_port | default(18789) }}) is bound to localhost. Access it via:
