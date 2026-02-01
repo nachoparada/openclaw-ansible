@@ -21,6 +21,8 @@ clawdbot_gateway_tailscale_mode: "serve"
 clawdbot_seed_gateway_config: true
 # Gateway port
 clawdbot_gateway_port: 18789
+# Gateway authentication token (leave empty to auto-generate)
+clawdbot_gateway_token: ""
 
 # Clawdbot config directory
 clawdbot_config_dir: "{{ clawdbot_home }}/.clawdbot"

@@ -183,6 +183,15 @@ These variables only apply when `clawdbot_install_mode: development`
 - **Default**: `18789`
 - **Description**: Port for the Clawdbot gateway service.
 
+#### `clawdbot_gateway_token`
+- **Type**: String
+- **Default**: `""` (empty - auto-generated)
+- **Description**: Authentication token for the gateway API. If left empty, a random 64-character token is automatically generated during installation. The token is stored in `~/.clawdbot/clawdbot.json`.
+- **Example**:
+  ```bash
+  -e clawdbot_gateway_token=your-custom-token-here
+  ```
+
 ### Node.js Configuration
 
 #### `nodejs_version`

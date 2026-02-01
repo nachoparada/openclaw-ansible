@@ -99,6 +99,7 @@ By default, the Clawdbot gateway is configured with secure defaults:
 
 - **Loopback binding**: Gateway binds to 127.0.0.1, not accessible from network
 - **Tailscale Serve**: Access gateway securely via Tailscale with HTTPS
+- **Auto-generated token**: A random 64-character authentication token is generated if not provided
 
 ### Configuration Variables
 
@@ -107,6 +108,13 @@ By default, the Clawdbot gateway is configured with secure defaults:
 | `clawdbot_gateway_bind` | `loopback` | Bind to 127.0.0.1 (secure) or 0.0.0.0 (network) |
 | `clawdbot_gateway_mode` | `local` | `local` for localhost only, `network` for network access |
 | `clawdbot_gateway_tailscale_mode` | `serve` | Use Tailscale Serve for secure HTTPS access |
+| `clawdbot_gateway_token` | auto-generated | 64-character authentication token |
+
+### Gateway Authentication Token
+
+The gateway requires an authentication token for API access. If you don't provide one via `clawdbot_gateway_token`, a secure 64-character random token is automatically generated during installation.
+
+The token is stored in `~/.clawdbot/clawdbot.json` with restricted permissions (mode 0600).
 
 ### Why Loopback Binding?
 

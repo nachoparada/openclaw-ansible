@@ -75,6 +75,18 @@
 # We also do NOT install the systemd service - clawdbot onboard --install-daemon will do that
 # The .clawdbot directory structure is created above, but config and daemon are user-initiated
 
+# Generate gateway token if not provided
+- name: Generate gateway authentication token
+  ansible.builtin.set_fact:
+    clawdbot_gateway_token: "{{ lookup('community.general.random_string', length=64, special=false) }}"
+  when: clawdbot_gateway_token | length == 0 and clawdbot_seed_gateway_config | bool
+  no_log: true
+
+- name: Display gateway token generation status
+  ansible.builtin.debug:
+    msg: "✅ Gateway authentication token auto-generated (64 characters)"
+  when: clawdbot_gateway_token | length > 0 and clawdbot_seed_gateway_config | bool
+
 # Seed gateway configuration with secure defaults
 - name: Seed gateway configuration file
   ansible.builtin.copy:
@@ -89,12 +101,14 @@
           "mode": "{{ clawdbot_gateway_mode }}",
           "bind": "{{ '127.0.0.1' if clawdbot_gateway_bind == 'loopback' else '0.0.0.0' }}",
           "port": {{ clawdbot_gateway_port }},
+          "token": "{{ clawdbot_gateway_token }}",
           "tailscale": {
             "mode": "{{ clawdbot_gateway_tailscale_mode }}"
           }
         }
       }
   when: clawdbot_seed_gateway_config | bool
+  no_log: true
 
 - name: Display gateway configuration status
   ansible.builtin.debug:
