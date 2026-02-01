@@ -172,12 +172,13 @@ These variables only apply when `clawdbot_install_mode: development`
 #### `tailscale_authkey`
 - **Type**: String
 - **Default**: `""` (empty - manual setup required)
-- **Description**: Tailscale authentication key for automatic connection
+- **Description**: Tailscale authentication key for automatic connection. When provided, Tailscale SSH is automatically enabled (`--ssh` flag), allowing secure SSH access via Tailscale authentication.
 - **Example**:
   ```bash
   -e tailscale_authkey=tskey-auth-k1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
   ```
 - **Get Key**: https://login.tailscale.com/admin/settings/keys
+- **Note**: When using an auth key, Tailscale connects automatically and enables Tailscale SSH for secure access
 
 ### OS-Specific Settings
 

@@ -270,10 +270,14 @@ ansible-playbook playbook.yml --ask-become-pass \
 
 #### Tailscale Auto-Connect
 
+Automatically connect to your Tailnet with SSH access enabled:
+
 ```bash
 ansible-playbook playbook.yml --ask-become-pass \
   -e tailscale_authkey=tskey-auth-xxxxxxxxxxxxx
 ```
+
+This enables Tailscale SSH, allowing secure SSH access via Tailscale authentication.
 
 ## License
 

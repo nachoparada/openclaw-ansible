@@ -44,6 +44,17 @@
   changed_when: false
   failed_when: false
 
+- name: Connect to Tailscale using auth key (Linux)
+  ansible.builtin.command: tailscale up --authkey {{ tailscale_authkey }} --ssh
+  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length > 0
+  no_log: true
+  changed_when: true
+
+- name: Display Tailscale connection status (Linux)
+  ansible.builtin.debug:
+    msg: "✅ Tailscale connected with SSH enabled"
+  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length > 0
+
 - name: Display Tailscale auth URL if not connected (Linux)
   ansible.builtin.debug:
     msg:
@@ -52,10 +63,10 @@
       - "============================================"
       - ""
       - "To connect this machine to your Tailnet:"
-      - "Run: sudo tailscale up"
+      - "Run: sudo tailscale up --ssh"
       - ""
       - "For unattended installation, use an auth key:"
-      - "sudo tailscale up --authkey tskey-auth-xxxxx"
+      - "sudo tailscale up --authkey tskey-auth-xxxxx --ssh"
       - ""
       - "Get auth key from: https://login.tailscale.com/admin/settings/keys"
-  when: tailscale_status_linux.rc != 0
+  when: tailscale_status_linux.rc != 0 and tailscale_authkey | length == 0
