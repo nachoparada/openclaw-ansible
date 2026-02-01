@@ -195,6 +195,18 @@ These are automatically set based on the detected OS:
 - **Description**: System package manager
 - **Read-only**: Set automatically based on OS
 
+### System Settings
+
+#### `timezone`
+- **Type**: String
+- **Default**: `UTC`
+- **Description**: System timezone (Linux only). Ensures logs have accurate timestamps.
+- **Example**:
+  ```bash
+  -e timezone=America/New_York
+  ```
+- **List timezones**: Run `timedatectl list-timezones` on a Linux system
+
 ## Configuration Examples
 
 ### Basic Setup with SSH Keys

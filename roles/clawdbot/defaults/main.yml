@@ -32,6 +32,10 @@ clawdbot_repo_branch: "main"
 clawdbot_code_dir: "{{ clawdbot_home }}/code"
 clawdbot_repo_dir: "{{ clawdbot_code_dir }}/clawdbot"
 
+# System timezone (Linux only)
+# See: timedatectl list-timezones
+timezone: "UTC"
+
 # SSH keys for clawdbot user
 # Add your public SSH keys here to allow SSH access as clawdbot user
 # Example:
