@@ -8,7 +8,7 @@ description: Detailed installation and configuration instructions
 ## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pasogott/clawdbot-ansible/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
 ```
 
 ## Manual Installation
@@ -23,8 +23,8 @@ sudo apt install -y ansible git
 ### Clone and Run
 
 ```bash
-git clone https://github.com/pasogott/clawdbot-ansible.git
-cd clawdbot-ansible
+git clone https://github.com/openclaw/openclaw-ansible.git
+cd openclaw-ansible
 
 # Install Ansible collections
 ansible-galaxy collection install -r requirements.yml
@@ -50,62 +50,55 @@ sudo tailscale status
 
 Get auth keys from: https://login.tailscale.com/admin/settings/keys
 
-### 2. Configure Clawdbot
+### 2. Switch to OpenClaw User
 
 ```bash
-# Edit config
-sudo nano /home/clawdbot/.clawdbot/config.yml
-
-# Key settings to configure:
-# - provider: whatsapp/telegram/signal
-# - phone: your number
-# - ai.provider: anthropic/openai
-# - ai.model: claude-3-5-sonnet-20241022
+sudo su - openclaw
 ```
 
-### 3. Login to Provider
+### 3. Configure OpenClaw
 
 ```bash
-# Login (will prompt for QR code or phone verification)
-sudo docker exec -it clawdbot clawdbot login
+# Run onboarding wizard (recommended)
+openclaw onboard --install-daemon
 
-# Check connection
-sudo docker logs -f clawdbot
+# Or configure manually
+openclaw configure
+
+# Edit config directly
+nano ~/.openclaw/openclaw.json
+```
+
+### 4. Login to Channel
+
+```bash
+# Login to messaging channel (WhatsApp/Telegram/Discord)
+openclaw channels login
+
+# Check connection status
+openclaw status
 ```
 
 ## Service Management
 
-### Systemd Commands
+### OpenClaw Gateway Commands
 
 ```bash
-# Start/stop/restart
-sudo systemctl start clawdbot
-sudo systemctl stop clawdbot
-sudo systemctl restart clawdbot
-
-# View status
-sudo systemctl status clawdbot
-
-# Enable/disable auto-start
-sudo systemctl enable clawdbot
-sudo systemctl disable clawdbot
-```
-
-### Docker Commands
-
-```bash
-# View logs
-sudo docker logs clawdbot
-sudo docker logs -f clawdbot  # follow
-
-# Shell access
-sudo docker exec -it clawdbot bash
-
-# Restart container
-sudo docker restart clawdbot
-
 # Check status
-sudo docker compose -f /opt/clawdbot/docker-compose.yml ps
+openclaw gateway status
+
+# Start/stop/restart
+openclaw gateway start
+openclaw gateway stop
+openclaw gateway restart
+
+# View logs
+openclaw logs
+openclaw logs --follow
+
+# Health check
+openclaw health
+openclaw doctor
 ```
 
 ### Firewall Management
@@ -122,24 +115,32 @@ sudo ufw reload
 sudo iptables -L DOCKER-USER -n -v
 ```
 
-## Accessing Clawdbot
+## Accessing OpenClaw
 
-Clawdbot's web interface runs on port 3000 (localhost only).
+OpenClaw's web interface runs on port 18789 (localhost only by default).
 
-### Via Tailscale (Recommended)
+### Via Dashboard
 
 ```bash
-# After connecting Tailscale, browse to:
-http://TAILSCALE_IP:3000
+# Open dashboard in browser
+openclaw dashboard
 ```
-
-Wait, port 3000 is bound to localhost, so this won't work directly. Need to update the compose file or use SSH tunnel.
 
 ### Via SSH Tunnel
 
 ```bash
-ssh -L 3000:localhost:3000 user@server
-# Then browse to: http://localhost:3000
+ssh -L 18789:localhost:18789 user@server
+# Then browse to: http://localhost:18789
+```
+
+### Via Tailscale Serve
+
+```bash
+# Expose via Tailscale Serve (HTTPS)
+tailscale serve https / http://localhost:18789
+
+# Access from any device on your Tailnet:
+# https://your-machine-name.your-tailnet.ts.net/
 ```
 
 ## Verification
@@ -186,22 +187,21 @@ sudo tailscale status
 
 ```bash
 # Stop services
-sudo systemctl stop clawdbot
-sudo systemctl disable clawdbot
-sudo tailscale down
+sudo su - openclaw
+openclaw gateway stop
 
-# Remove containers and data
-sudo docker compose -f /opt/clawdbot/docker-compose.yml down
-sudo rm -rf /opt/clawdbot
-sudo rm -rf /home/clawdbot/.clawdbot
-sudo rm /etc/systemd/system/clawdbot.service
-sudo systemctl daemon-reload
+# Exit back to your user
+exit
+
+# Remove user and data
+sudo userdel -r openclaw
+
+# Remove Tailscale (optional)
+sudo tailscale down
+sudo apt remove --purge tailscale
 
 # Remove packages (optional)
-sudo apt remove --purge tailscale docker-ce docker-ce-cli containerd.io docker-compose-plugin nodejs
-
-# Remove user (optional)
-sudo userdel -r clawdbot
+sudo apt remove --purge docker-ce docker-ce-cli containerd.io docker-compose-plugin nodejs
 
 # Reset firewall (optional)
 sudo ufw disable
@@ -210,39 +210,30 @@ sudo ufw --force reset
 
 ## Advanced Configuration
 
-### Custom Port
+### Custom Gateway Port
 
-Edit `/opt/clawdbot/docker-compose.yml`:
+Edit `~/.openclaw/openclaw.json`:
 
-```yaml
-ports:
-  - "127.0.0.1:3001:3000"  # Change 3001 to desired port
+```json
+{
+  "gateway": {
+    "port": 18790
+  }
+}
 ```
 
 Then restart:
 ```bash
-sudo systemctl restart clawdbot
+openclaw gateway restart
 ```
 
 ### Environment Variables
 
-Add to `/opt/clawdbot/docker-compose.yml`:
+Set in your shell or service environment:
 
-```yaml
-environment:
-  - NODE_ENV=production
-  - ANTHROPIC_API_KEY=sk-ant-xxx
-  - DEBUG=clawdbot:*
-```
-
-### Volume Mounts
-
-Add additional volumes in docker-compose.yml:
-
-```yaml
-volumes:
-  - /home/clawdbot/.clawdbot:/home/clawdbot/.clawdbot
-  - /path/to/custom:/custom
+```bash
+export ANTHROPIC_API_KEY=sk-ant-xxx
+export DEBUG=openclaw:*
 ```
 
 ## Automation
@@ -260,9 +251,16 @@ ansible-playbook playbook.yml \
 
 ```yaml
 # Example GitHub Actions
-- name: Deploy Clawdbot
+- name: Deploy OpenClaw
   run: |
     ansible-playbook playbook.yml \
       -e "tailscale_authkey=${{ secrets.TAILSCALE_KEY }}" \
       --become
 ```
+
+## See Also
+
+- [OpenClaw Documentation](https://docs.openclaw.ai)
+- [Getting Started](https://docs.openclaw.ai/start/getting-started)
+- [Configuration Guide](configuration.md)
+- [Troubleshooting](troubleshooting.md)

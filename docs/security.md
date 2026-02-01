@@ -18,12 +18,12 @@ On Linux systems, the playbook automatically hardens SSH configuration:
 
 **Important**: Before running this playbook, ensure you have:
 
-1. Configured your SSH keys in the `clawdbot_ssh_keys` variable
+1. Configured your SSH keys in the `openclaw_ssh_keys` variable
 2. Tested SSH key access to avoid being locked out
 
 ```yaml
 # Example: Configure SSH keys before running
-clawdbot_ssh_keys:
+openclaw_ssh_keys:
   - "ssh-ed25519 AAAAC3... user@host"
 ```
 
@@ -65,12 +65,12 @@ All container ports bind to 127.0.0.1:
 
 ```yaml
 ports:
-  - "127.0.0.1:3000:3000"
+  - "127.0.0.1:18789:18789"
 ```
 
 ## Layer 4: Non-Root Container
 
-Container processes run as unprivileged `clawdbot` user.
+Container processes run as unprivileged `openclaw` user.
 
 ## Verification
 
@@ -95,7 +95,7 @@ curl http://localhost:80        # Should work
 
 ## Gateway Security
 
-By default, the Clawdbot gateway is configured with secure defaults:
+By default, the OpenClaw gateway is configured with secure defaults:
 
 - **Loopback binding**: Gateway binds to 127.0.0.1, not accessible from network
 - **Tailscale Serve**: Access gateway securely via Tailscale with HTTPS
@@ -105,16 +105,16 @@ By default, the Clawdbot gateway is configured with secure defaults:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `clawdbot_gateway_bind` | `loopback` | Bind to 127.0.0.1 (secure) or 0.0.0.0 (network) |
-| `clawdbot_gateway_mode` | `local` | `local` for localhost only, `network` for network access |
-| `clawdbot_gateway_tailscale_mode` | `serve` | Use Tailscale Serve for secure HTTPS access |
-| `clawdbot_gateway_token` | auto-generated | 64-character authentication token |
+| `openclaw_gateway_bind` | `loopback` | Bind to 127.0.0.1 (secure) or 0.0.0.0 (network) |
+| `openclaw_gateway_mode` | `local` | `local` for localhost only, `network` for network access |
+| `openclaw_gateway_tailscale_mode` | `serve` | Use Tailscale Serve for secure HTTPS access |
+| `openclaw_gateway_token` | auto-generated | 64-character authentication token |
 
 ### Gateway Authentication Token
 
-The gateway requires an authentication token for API access. If you don't provide one via `clawdbot_gateway_token`, a secure 64-character random token is automatically generated during installation.
+The gateway requires an authentication token for API access. If you don't provide one via `openclaw_gateway_token`, a secure 64-character random token is automatically generated during installation.
 
-The token is stored in `~/.clawdbot/clawdbot.json` with restricted permissions (mode 0600).
+The token is stored in `~/.openclaw/openclaw.json` with restricted permissions (mode 0600).
 
 ### Why Loopback Binding?
 
@@ -125,11 +125,11 @@ Binding to loopback (127.0.0.1) ensures the gateway is never directly accessible
 
 ### Network-Based Access Control
 
-If you need direct network access to the gateway (not recommended for public networks), you can configure `clawdbot_allowed_networks` to allow specific IP ranges through the UFW firewall:
+If you need direct network access to the gateway (not recommended for public networks), you can configure `openclaw_allowed_networks` to allow specific IP ranges through the UFW firewall:
 
 ```yaml
 # Example: Allow access from trusted networks
-clawdbot_allowed_networks:
+openclaw_allowed_networks:
   - { ip: "192.168.1.0/24", comment: "Home network" }
   - { ip: "10.100.0.0/16", comment: "Tailscale network" }
 ```
@@ -138,7 +138,7 @@ clawdbot_allowed_networks:
 
 ## Tailscale Access
 
-Clawdbot's gateway (port {{ clawdbot_gateway_port | default(18789) }}) is bound to localhost. Access it via:
+OpenClaw's gateway (port 18789) is bound to localhost. Access it via:
 
 1. **SSH tunnel**:
    ```bash

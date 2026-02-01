@@ -5,14 +5,14 @@ description: Common issues and solutions
 
 # Troubleshooting
 
-## Container Can't Reach Internet
+## OpenClaw Can't Reach Internet
 
-**Symptom**: Clawdbot can't connect to WhatsApp/Telegram
+**Symptom**: OpenClaw can't connect to WhatsApp/Telegram
 
 **Check**:
 ```bash
-# Test from container
-sudo docker exec clawdbot ping -c 3 8.8.8.8
+# Test network connectivity
+curl -I https://api.anthropic.com
 
 # Check UFW allows outbound
 sudo ufw status verbose | grep OUT
@@ -26,23 +26,24 @@ sudo iptables -L DOCKER-USER -n -v
 # Restart Docker + Firewall
 sudo systemctl restart docker
 sudo ufw reload
-sudo systemctl restart clawdbot
 ```
 
 ## Port Already in Use
 
-**Symptom**: Port 3000 conflict
+**Symptom**: Port 18789 conflict
 
 **Solution**:
 ```bash
-# Find what's using port 3000
-sudo ss -tlnp | grep 3000
+# Find what's using port 18789
+sudo ss -tlnp | grep 18789
 
-# Change Clawdbot port
-sudo nano /opt/clawdbot/docker-compose.yml
-# Change: "127.0.0.1:3001:3000"
+# Change OpenClaw gateway port in config
+sudo su - openclaw
+nano ~/.openclaw/openclaw.json
+# Change gateway.port
 
-sudo systemctl restart clawdbot
+# Restart gateway
+openclaw gateway restart
 ```
 
 ## Firewall Lockout
@@ -64,29 +65,32 @@ sudo ufw allow 22/tcp
 sudo ufw enable
 ```
 
-## Container Won't Start
+## Gateway Won't Start
 
 **Check logs**:
 ```bash
-# Systemd logs
-sudo journalctl -u clawdbot -n 50
+# Check gateway status
+openclaw gateway status
 
-# Docker logs
-sudo docker logs clawdbot
+# View logs
+openclaw logs
 
-# Compose status
-sudo docker compose -f /opt/clawdbot/docker-compose.yml ps
+# Check systemd logs
+journalctl --user -u openclaw-gateway -n 50
 ```
 
 **Common fixes**:
 ```bash
-# Rebuild image
-cd /opt/clawdbot
-sudo docker compose build --no-cache
-sudo systemctl restart clawdbot
-
 # Check permissions
-sudo chown -R clawdbot:clawdbot /home/clawdbot/.clawdbot
+ls -la ~/.openclaw/
+
+# Fix permissions
+chmod 600 ~/.openclaw/openclaw.json
+chmod 700 ~/.openclaw/credentials
+
+# Reinstall gateway service
+openclaw gateway install
+openclaw gateway start
 ```
 
 ## Verify Docker Isolation
@@ -137,4 +141,88 @@ ansible-playbook playbook.yml --ask-become-pass
 ```bash
 sudo systemctl start docker
 # Re-run playbook
+```
+
+## OpenClaw Command Not Found
+
+**Symptom**: `openclaw: command not found`
+
+**Solution**:
+```bash
+# Check if ~/.local/bin is in PATH
+echo $PATH | grep ".local/bin"
+
+# Add to PATH if missing
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Verify installation
+which openclaw
+openclaw --version
+```
+
+## Channel Login Issues
+
+**WhatsApp QR code not appearing**:
+```bash
+# Try restarting gateway first
+openclaw gateway restart
+
+# Then run login
+openclaw channels login
+```
+
+**Telegram bot not responding**:
+```bash
+# Check bot token is configured
+openclaw status
+
+# Check pairing status
+openclaw pairing list telegram
+```
+
+## Health Check Fails
+
+**Run diagnostics**:
+```bash
+# Quick status check
+openclaw status
+
+# Detailed health check
+openclaw health
+
+# Full diagnostic report
+openclaw status --all
+
+# Run doctor
+openclaw doctor
+```
+
+## Session/Context Issues
+
+**Reset a session**:
+```bash
+# Send /reset or /new in the chat
+# Or manually:
+rm ~/.openclaw/agents/*/sessions/<session-id>.jsonl
+```
+
+## Development Mode Issues
+
+**Build fails**:
+```bash
+cd ~/code/openclaw
+
+# Clean install
+rm -rf node_modules
+pnpm install
+pnpm build
+```
+
+**Symlink broken**:
+```bash
+# Recreate symlink
+rm ~/.local/bin/openclaw
+ln -sf ~/code/openclaw/openclaw.mjs ~/.local/bin/openclaw
+chmod +x ~/code/openclaw/openclaw.mjs
 ```

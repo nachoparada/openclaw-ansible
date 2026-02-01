@@ -1,4 +1,43 @@
-# Changelog - Multi-OS Support & Bug Fixes
+# Changelog 
+
+## [3.0.0] - 2026-02-01
+
+### Major Changes
+
+#### Rebranding: ClawdBot to OpenClaw
+- **Complete rebrand** from ClawdBot to OpenClaw
+- **All commands updated**: `clawdbot` → `openclaw`
+- **All paths updated**: `~/.clawdbot/` → `~/.openclaw/`
+- **Config files updated**: `clawdbot.json` → `openclaw.json`
+- **Role renamed**: `roles/clawdbot/` → `roles/openclaw/`
+- **CLI command changes**:
+  - `clawdbot daemon install/start/stop` → `openclaw gateway install/start/stop`
+  - `clawdbot providers login` → `openclaw channels login`
+
+#### Updated Documentation
+- All docs reference OpenClaw and new CLI commands
+- URLs updated to `docs.openclaw.ai`
+- GitHub URLs updated to `github.com/openclaw/openclaw`
+
+### Files Renamed
+- `roles/clawdbot/` → `roles/openclaw/`
+- `tasks/clawdbot.yml` → `tasks/openclaw.yml`
+- `tasks/clawdbot-release.yml` → `tasks/openclaw-release.yml`
+- `tasks/clawdbot-development.yml` → `tasks/openclaw-development.yml`
+- `templates/clawdbot-host.service.j2` → `templates/openclaw-gateway.service.j2`
+- `templates/clawdbot-config.yml.j2` → `templates/openclaw-config.yml.j2`
+- `files/clawdbot-setup.sh` → `files/openclaw-setup.sh`
+
+### Variables Renamed
+All `clawdbot_*` variables renamed to `openclaw_*`:
+- `clawdbot_user` → `openclaw_user`
+- `clawdbot_home` → `openclaw_home`
+- `clawdbot_config_dir` → `openclaw_config_dir`
+- `clawdbot_install_mode` → `openclaw_install_mode`
+- `clawdbot_repo_url` → `openclaw_repo_url`
+- And 25+ more...
+
+---
 
 ## [2.0.0] - 2025-01-09
 
