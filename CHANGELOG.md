@@ -10,22 +10,45 @@ This version represents the first release of the **OpenClaw Ansible** project, a
 
 *Credit: This project is a continuation and rebranding of the [ClawdBot Ansible](https://github.com/clawdbot/clawdbot-ansible) repository. We thank the original contributors for their work on the initial automation framework.*
 
-### Major Changes
+### ✨ New Features
 
-#### Rebranding: ClawdBot to OpenClaw
-- **Complete rebrand** from ClawdBot to OpenClaw
-- **All commands updated**: `clawdbot` → `openclaw`
-- **All paths updated**: `~/.clawdbot/` → `~/.openclaw/`
-- **Config files updated**: `clawdbot.json` → `openclaw.json`
-- **Role renamed**: `roles/clawdbot/` → `roles/openclaw/`
-- **CLI command changes**:
-  - `clawdbot daemon install/start/stop` → `openclaw gateway install/start/stop`
-  - `clawdbot providers login` → `openclaw channels login`
+#### Tailscale Integration
+- **Auto-connect with authkey**: Automatically connect to Tailscale using an auth key
+- **SSH flag support**: Enable Tailscale SSH during connection
+- **Tailnet access**: Gateway configuration for Tailnet access
 
-#### Updated Documentation
+#### Gateway Enhancements
+- **Auto-generate auth token**: Gateway auth token is automatically generated if not set
+- **Auto-start daemon option**: Option to automatically start the gateway daemon after installation
+- **Configurable allowed networks**: Firewall rules for gateway access can be configured per network
+
+#### Security Improvements
+- **SSH hardening for Linux**: Added SSH security hardening configuration
+- **Timezone configuration**: Configurable system timezone
+
+#### Configuration Options
+- **PATH configuration variables**: Added variables to configure PATH for the openclaw user
+
+### 🐛 Bug Fixes
+
+- **Playbook**: Use `combine` filter for `ansible_env` to preserve existing environment variables
+- **Playbook**: Add `become: false` to Homebrew installation task
+- **Playbook**: Install `acl` package for privilege escalation on Linux
+- **User**: Use `ansible.posix.authorized_key` module for SSH key management
+- **Lint**: Resolved ansible-lint errors
+
+### 🔧 Refactoring & Build
+
+- **Rebranding**: Complete rebrand from ClawdBot to OpenClaw (commands, paths, variables, docs)
+- **Task order**: Move user creation to run first in task order
+- **Ansible version**: Update minimum Ansible version to 9.x and pin CI versions
+
+### 📚 Documentation
+
 - All docs reference OpenClaw and new CLI commands
 - URLs updated to `docs.openclaw.ai`
 - GitHub URLs updated to `github.com/nachoparada/openclaw-ansible`
+- Lint badge updated to use `nachoparada/openclaw-ansible`
 
 ### Files Renamed
 - `roles/clawdbot/` → `roles/openclaw/`

@@ -22,6 +22,37 @@ This release completes the rebrand. All commands, paths, variables, and document
 | Channels | `providers` | `channels` |
 | URL | `docs.clawd.bot` | `docs.openclaw.ai` |
 
+### New Features in v0.5.0
+
+Beyond the rebrand, this version includes several new features and improvements:
+
+#### Tailscale Integration
+- Auto-connect with authkey support
+- SSH flag for Tailscale connection
+- Gateway configuration for Tailnet access
+
+#### Gateway Enhancements
+- Auto-generate gateway auth token if not set
+- Auto-start daemon option after installation
+- Configurable allowed networks for firewall rules
+
+#### Security & Configuration
+- SSH hardening for Linux systems
+- Timezone configuration support
+- PATH configuration variables for the openclaw user
+
+#### Bug Fixes
+- Use `combine` filter for `ansible_env` to preserve existing variables
+- Add `become: false` to Homebrew installation task
+- Install `acl` package for privilege escalation on Linux
+- Use `ansible.posix.authorized_key` module for SSH key management
+- Resolved ansible-lint errors
+
+#### Build & Infrastructure
+- Minimum Ansible version updated to 9.x
+- CI versions pinned for stability
+- User creation moved to run first in task order
+
 ### Variable Migration
 
 All Ansible variables have been renamed from `clawdbot_*` to `openclaw_*`. If you are using custom playbooks or inventory files, you must update your variables:

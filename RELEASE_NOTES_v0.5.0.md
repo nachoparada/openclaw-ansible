@@ -20,6 +20,19 @@ OpenClaw Ansible provides automated deployment of [OpenClaw](https://openclaw.ai
 - Systemd service for running OpenClaw as a background daemon
 - Commands: `openclaw gateway install`, `openclaw gateway start`, `openclaw gateway stop`
 - Auto-start on boot with proper user permissions
+- **Auto-generate auth token**: Gateway auth token is automatically generated if not set
+- **Auto-start daemon option**: Option to automatically start the gateway daemon after installation
+- **Configurable allowed networks**: Firewall rules for gateway access can be configured per network
+- **Tailnet access**: Gateway configuration for accessing via Tailscale network
+
+#### Tailscale Integration
+- **Auto-connect with authkey**: Automatically connect to Tailscale using an auth key
+- **SSH flag support**: Enable Tailscale SSH during connection
+
+#### Security
+- **SSH hardening for Linux**: Added SSH security hardening configuration
+- **Timezone configuration**: Configurable system timezone
+- **PATH configuration variables**: Added variables to configure PATH for the openclaw user
 
 #### Development Tooling
 - Helper aliases: `openclaw-rebuild`, `openclaw-dev`, `openclaw-pull`
@@ -33,6 +46,19 @@ OpenClaw Ansible provides automated deployment of [OpenClaw](https://openclaw.ai
 - Proper DBus session bus configuration
 - XDG runtime directory setup
 - User lingering enabled for systemd user services
+
+### 🐛 Bug Fixes
+
+- Use `combine` filter for `ansible_env` to preserve existing environment variables
+- Add `become: false` to Homebrew installation task
+- Install `acl` package for privilege escalation on Linux
+- Use `ansible.posix.authorized_key` module for SSH key management
+- Resolved ansible-lint errors
+
+### 🔧 Build & Infrastructure
+
+- Minimum Ansible version updated to 9.x
+- CI versions pinned for stability
 
 ### 📦 Installation
 
