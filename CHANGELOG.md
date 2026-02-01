@@ -7,6 +7,8 @@
 #### Installer and Docs
 - **Align install URLs**: Use `nachoparada/openclaw-ansible` consistently in `install.sh`
 - **Clarify install methods**: Recommend clone-and-run for variable overrides, keep one-liner for defaults only
+- **Move Ansible install**: `run-playbook.sh` now installs Ansible when missing, keeping installer logic in one place
+- **Move collection install**: `run-playbook.sh` now installs Ansible collections before running the playbook
 
 #### Node.js Installation
 - **Use native Ansible modules**: Replaced shell-based GPG key and repo setup with `get_url` and `apt_repository` modules for better idempotency and change detection

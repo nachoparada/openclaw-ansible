@@ -1,6 +1,38 @@
 #!/bin/bash
 set -e
 
+# Ensure Ansible is installed before running the playbook
+if ! command -v ansible-playbook &> /dev/null; then
+    if [ "$EUID" -eq 0 ]; then
+        SUDO=""
+    else
+        if ! command -v sudo &> /dev/null; then
+            echo "Error: sudo is not installed. Please install sudo or run as root."
+            exit 1
+        fi
+        SUDO="sudo"
+    fi
+
+    if command -v apt-get &> /dev/null; then
+        echo "Ansible not found. Installing via apt..."
+        $SUDO apt-get update -qq
+        $SUDO apt-get install -y ansible
+    elif command -v brew &> /dev/null; then
+        echo "Ansible not found. Installing via Homebrew..."
+        brew install ansible
+    else
+        echo "Error: Ansible not found and no supported package manager detected."
+        echo "Install Ansible manually, then re-run this script."
+        exit 1
+    fi
+fi
+
+# Ensure required collections are installed
+if [ -f requirements.yml ]; then
+    echo "Installing Ansible collections..."
+    ansible-galaxy collection install -r requirements.yml
+fi
+
 # Run the Ansible playbook
 if [ "$EUID" -eq 0 ]; then
     ansible-playbook playbook.yml -e ansible_become=false "$@"

@@ -31,6 +31,8 @@ cd openclaw-ansible
 ./run-playbook.sh
 ```
 
+`run-playbook.sh` will install Ansible and required collections if missing.
+
 Need to override defaults? Pass vars on the command line:
 
 ```bash
