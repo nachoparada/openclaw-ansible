@@ -51,7 +51,9 @@ package_manager: "{{ 'brew' if ansible_os_family == 'Darwin' else 'apt' }}"
 # These provide consistent PATH configuration across tasks
 clawdbot_path_homebrew: "{{ homebrew_prefix }}/bin"
 clawdbot_path_minimal: "/usr/local/bin:/usr/bin:/bin"
-clawdbot_path: "{{ clawdbot_home }}/.local/bin:{{ clawdbot_home }}/.local/share/pnpm:{{ clawdbot_path_homebrew }}:{{ clawdbot_path_minimal }}"
+clawdbot_path: >-
+  {{ clawdbot_home }}/.local/bin:{{ clawdbot_home }}/.local/share/pnpm:{{
+  clawdbot_path_homebrew }}:{{ clawdbot_path_minimal }}
 
 # Installation mode: 'release' or 'development'
 # release: Install via pnpm install -g clawdbot@latest

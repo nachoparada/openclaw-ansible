@@ -112,7 +112,9 @@
 
 - name: Display gateway configuration status
   ansible.builtin.debug:
-    msg: "✅ Gateway config seeded with secure defaults (bind: {{ clawdbot_gateway_bind }}, mode: {{ clawdbot_gateway_mode }})"
+    msg: >-
+      ✅ Gateway config seeded with secure defaults
+      (bind: {{ clawdbot_gateway_bind }}, mode: {{ clawdbot_gateway_mode }})
   when: clawdbot_seed_gateway_config | bool
 
 # Auto-start daemon on Linux (uses systemd)

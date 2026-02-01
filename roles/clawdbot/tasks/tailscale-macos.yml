@@ -21,7 +21,10 @@
   failed_when: false
 
 - name: Connect to Tailscale using auth key (macOS)
-  ansible.builtin.command: /Applications/Tailscale.app/Contents/MacOS/Tailscale up --authkey {{ tailscale_authkey }} --ssh
+  ansible.builtin.command:
+    cmd: >-
+      /Applications/Tailscale.app/Contents/MacOS/Tailscale up
+      --authkey {{ tailscale_authkey }} --ssh
   when: tailscale_status_macos.rc != 0 and tailscale_authkey | length > 0
   no_log: true
   changed_when: true
