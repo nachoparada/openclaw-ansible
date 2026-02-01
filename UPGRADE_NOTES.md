@@ -1,79 +1,64 @@
 # Upgrade Notes
 
-## Version 3.0.0 - OpenClaw Rebrand
+## Version 0.5.0 - OpenClaw Transition
 
-### Summary
+### Overview
 
-This release completes the rebrand from ClawdBot to OpenClaw. All commands, paths, variables, and documentation have been updated.
+Version 0.5.0 marks the transition of this project from **ClawdBot Ansible** to **OpenClaw Ansible**. While the core automation remains based on the excellent foundation provided by the original project, this version introduces full branding for [OpenClaw](https://openclaw.ai), updated CLI commands, and a new versioning scheme starting from 0.5.0.
+
+*Credit: This project is a continuation and rebranding of the ClawdBot Ansible repository. We thank the original contributors for their work on the initial automation framework.*
 
 ### Key Changes
 
-| Old (ClawdBot) | New (OpenClaw) |
-|----------------|----------------|
-| `clawdbot` CLI | `openclaw` CLI |
-| `~/.clawdbot/` | `~/.openclaw/` |
-| `clawdbot.json` | `openclaw.json` |
-| `clawdbot daemon install` | `openclaw gateway install` |
-| `clawdbot daemon start` | `openclaw gateway start` |
-| `clawdbot providers login` | `openclaw channels login` |
-| `github.com/clawdbot/clawdbot` | `github.com/openclaw/openclaw` |
-| `docs.clawd.bot` | `docs.openclaw.ai` |
+This release completes the rebrand. All commands, paths, variables, and documentation have been updated to the OpenClaw standard.
 
-### Variable Changes
+| Element | Old (ClawdBot) | New (OpenClaw) |
+|---------|----------------|----------------|
+| CLI Command | `clawdbot` | `openclaw` |
+| Home Dir | `/home/clawdbot` | `/home/openclaw` |
+| Config Dir | `~/.clawdbot/` | `~/.openclaw/` |
+| Config File | `clawdbot.json` | `openclaw.json` |
+| Gateway | `daemon` | `gateway` |
+| Channels | `providers` | `channels` |
+| URL | `docs.clawd.bot` | `docs.openclaw.ai` |
 
-All Ansible variables have been renamed from `clawdbot_*` to `openclaw_*`:
+### Variable Migration
+
+All Ansible variables have been renamed from `clawdbot_*` to `openclaw_*`. If you are using custom playbooks or inventory files, you must update your variables:
 
 ```yaml
 # Old
 clawdbot_user: clawdbot
-clawdbot_home: /home/clawdbot
 clawdbot_install_mode: release
 
 # New
 openclaw_user: openclaw
-openclaw_home: /home/openclaw
 openclaw_install_mode: release
 ```
 
 ### Migration from ClawdBot
 
-If you have an existing ClawdBot installation:
+If you are migrating from an existing ClawdBot installation, a fresh install is recommended to ensure all paths and permissions are correctly set up:
 
-```bash
-# 1. Stop the old daemon
-sudo su - clawdbot
-clawdbot daemon stop
-exit
+1. **Stop the old daemon**: `sudo su - clawdbot -c "clawdbot daemon stop"`
+2. **Remove the old user**: `sudo userdel -r clawdbot`
+3. **Run the OpenClaw installer**:
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/nachoparada/openclaw-ansible/main/install.sh | bash
+   ```
+4. **Onboard**: `sudo su - openclaw -c "openclaw onboard --install-gateway"`
 
-# 2. Remove old installation
-sudo userdel -r clawdbot
+### Internal Structure Changes
 
-# 3. Run new OpenClaw installer
-curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
-
-# 4. Configure OpenClaw
-sudo su - openclaw
-openclaw onboard --install-daemon
-```
-
-### Files Changed
-
-#### Renamed Files
-- `roles/clawdbot/` → `roles/openclaw/`
-- `tasks/clawdbot.yml` → `tasks/openclaw.yml`
-- `tasks/clawdbot-release.yml` → `tasks/openclaw-release.yml`
-- `tasks/clawdbot-development.yml` → `tasks/openclaw-development.yml`
-- `templates/clawdbot-host.service.j2` → `templates/openclaw-gateway.service.j2`
-- `templates/clawdbot-config.yml.j2` → `templates/openclaw-config.yml.j2`
-- `files/clawdbot-setup.sh` → `files/openclaw-setup.sh`
-
-#### Updated Content
-- All `.yml` files - variable names and CLI commands
-- All `.md` files - documentation and URLs
-- All `.sh` files - branding and commands
-- All `.j2` files - template variables
+- Role renamed from `roles/clawdbot` to `roles/openclaw`.
+- All task files renamed from `clawdbot-*.yml` to `openclaw-*.yml`.
+- Templates updated to use `openclaw` naming and variables.
 
 ---
+
+# Historical Upgrade Notes (ClawdBot Era)
+
+*The documentation below is preserved for historical context and technical reference regarding the original foundation of the automation framework.*
 
 # Upgrade Notes - Option A Implementation
 

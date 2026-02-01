@@ -1,6 +1,14 @@
 # Changelog 
 
-## [3.0.0] - 2026-02-01
+## [0.5.0] - 2026-02-01
+
+### 🚀 Initial OpenClaw Release
+
+This version represents the first release of the **OpenClaw Ansible** project, a continuation and rebranding of the original **ClawdBot Ansible** repository. 
+
+*Note: Versioning has been reset to 0.5.0 for this new project phase.*
+
+*Credit: This project is a continuation and rebranding of the [ClawdBot Ansible](https://github.com/clawdbot/clawdbot-ansible) repository. We thank the original contributors for their work on the initial automation framework.*
 
 ### Major Changes
 
@@ -17,7 +25,7 @@
 #### Updated Documentation
 - All docs reference OpenClaw and new CLI commands
 - URLs updated to `docs.openclaw.ai`
-- GitHub URLs updated to `github.com/openclaw/openclaw`
+- GitHub URLs updated to `github.com/nachoparada/openclaw-ansible`
 
 ### Files Renamed
 - `roles/clawdbot/` → `roles/openclaw/`
@@ -35,11 +43,10 @@ All `clawdbot_*` variables renamed to `openclaw_*`:
 - `clawdbot_config_dir` → `openclaw_config_dir`
 - `clawdbot_install_mode` → `openclaw_install_mode`
 - `clawdbot_repo_url` → `openclaw_repo_url`
-- And 25+ more...
 
 ---
 
-## [2.0.0] - 2025-01-09
+## [2.0.0] - 2025-01-09 (Historical - ClawdBot)
 
 ### 🎉 Major Changes
 
