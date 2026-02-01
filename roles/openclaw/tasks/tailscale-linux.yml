@@ -3,21 +3,21 @@
 
 - name: Add Tailscale GPG key
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg"
+    url: >
+      https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/
+      {{ ansible_distribution_release }}.noarmor.gpg
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     mode: "0644"
 
 - name: Add Tailscale repository
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    repo: >
+      deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg]
+      https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}
+      {{ ansible_distribution_release }} main
     filename: tailscale
     state: present
-  register: tailscale_repo
-
-- name: Update apt cache after adding Tailscale repo
-  ansible.builtin.apt:
     update_cache: true
-  when: tailscale_repo.changed
 
 - name: Install Tailscale
   ansible.builtin.apt:
