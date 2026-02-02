@@ -13,8 +13,8 @@ openclaw_port: 3000
 # First-run safety toggles
 # These control steps that can lock you out if networking/SSH/firewall assumptions are wrong.
 # Enable them after you have confirmed you can reconnect (ideally via both public SSH and Tailscale).
-openclaw_firewall_enabled: false
-openclaw_ssh_hardening_enabled: false
+openclaw_firewall_enabled: true
+openclaw_ssh_hardening_enabled: true
 
 # Gateway configuration
 # mode: "local" (localhost only), "network" (accessible from network)
