@@ -3,8 +3,12 @@
 
 - name: Include Linux firewall configuration
   ansible.builtin.include_tasks: firewall-linux.yml
-  when: ansible_os_family == 'Debian'
+  when:
+    - ansible_os_family == 'Debian'
+    - openclaw_firewall_enabled | bool
 
 - name: Include macOS firewall configuration
   ansible.builtin.include_tasks: firewall-macos.yml
-  when: ansible_os_family == 'Darwin'
+  when:
+    - ansible_os_family == 'Darwin'
+    - openclaw_firewall_enabled | bool

@@ -22,4 +22,6 @@
 
 - name: Include SSH hardening tasks (Linux only)
   ansible.builtin.include_tasks: ssh-hardening.yml
-  when: ansible_os_family == 'Debian'
+  when:
+    - ansible_os_family == 'Debian'
+    - openclaw_ssh_hardening_enabled | bool
