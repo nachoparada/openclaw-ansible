@@ -87,7 +87,7 @@
     msg: "Gateway authentication token auto-generated (64 characters)"
   when: openclaw_gateway_token | length > 0 and openclaw_seed_gateway_config | bool
 
-# Seed gateway configuration with secure defaults
+# Seed gateway configuration with secure defaults (no hardcoded versions)
 - name: Seed gateway configuration file
   ansible.builtin.copy:
     dest: "{{ openclaw_config_dir }}/openclaw.json"
@@ -97,16 +97,46 @@
     force: false  # Don't overwrite if exists
     content: |
       {
+        "auth": {
+          "profiles": {
+            "anthropic:default": {
+              "provider": "anthropic",
+              "mode": "token"
+            }
+          }
+        },
+        "agents": {
+          "defaults": {
+            "workspace": "{{ openclaw_config_dir }}/workspace",
+            "model": {
+              "primary": "{{ openclaw_default_model | default('anthropic/claude-opus-4-5') }}"
+            },
+            "maxConcurrent": {{ openclaw_max_concurrent | default(4) }},
+            "subagents": {
+              "maxConcurrent": {{ openclaw_subagents_max_concurrent | default(8) }}
+            }
+          }
+        },
         "gateway": {
-          "mode": "{{ openclaw_gateway_mode }}",
-          "bind": "{{ 'loopback' if openclaw_gateway_bind == 'loopback' else 'all' }}",
-          "port": {{ openclaw_gateway_port }},
+          "port": {{ openclaw_gateway_port | default(18789) }},
+          "mode": "{{ openclaw_gateway_mode | default('local') }}",
+          "bind": "{{ openclaw_gateway_bind | default('loopback') }}",
           "auth": {
             "mode": "token",
             "token": "{{ openclaw_gateway_token }}"
           },
           "tailscale": {
-            "mode": "{{ openclaw_gateway_tailscale_mode }}"
+            "mode": "{{ openclaw_gateway_tailscale_mode | default('serve') }}",
+            "resetOnExit": false
+          }
+        },
+        "commands": {
+          "native": "auto",
+          "nativeSkills": "auto"
+        },
+        "skills": {
+          "install": {
+            "nodeManager": "{{ openclaw_node_manager | default('pnpm') }}"
           }
         }
       }

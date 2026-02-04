@@ -88,3 +88,8 @@ openclaw_ssh_keys: []
 # group_vars/all.yml or host_vars
 openclaw_anthropic_token: "{{ vault_openclaw_anthropic_token }}"  # From claude setup-token
 openclaw_default_model: "anthropic/claude-opus-4-5"
+
+# Optional (with defaults shown)
+openclaw_node_manager: "pnpm"
+openclaw_max_concurrent: 4
+openclaw_subagents_max_concurrent: 8

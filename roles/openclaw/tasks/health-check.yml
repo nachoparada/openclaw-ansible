@@ -1,0 +1,12 @@
+- name: Run health check
+  ansible.builtin.shell:
+    cmd: openclaw health
+    executable: /bin/bash
+  environment:
+    PATH: "{{ openclaw_path }}"
+    HOME: "{{ openclaw_home }}"
+  become: true
+  become_user: "{{ openclaw_user }}"
+  register: health_check
+  failed_when: false
+  changed_when: false

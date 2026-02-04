@@ -34,3 +34,6 @@
 
 - name: Include workspace setup tasks
   ansible.builtin.include_tasks: workspace_setup.yml
+
+- name: Include health check tasks
+  ansible.builtin.include_tasks: health-check.yml
