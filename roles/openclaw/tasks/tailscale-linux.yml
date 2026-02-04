@@ -5,7 +5,7 @@
   ansible.builtin.get_url:
     # NOTE: Keep this URL on a single line. YAML folded scalars (`>`) insert
     # spaces/newlines, which can corrupt URLs (e.g., "ubuntu/ noble...").
-    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg"  # noqa: yaml[line-length]
+    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg"  # yamllint disable-line rule:line-length
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     mode: "0644"
 

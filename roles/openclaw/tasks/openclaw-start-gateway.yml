@@ -59,4 +59,3 @@
       - Guide you through channel setup
       - Install and start the gateway service automatically
   when: not (openclaw_start_gateway | bool and ansible_os_family == 'Debian')
-

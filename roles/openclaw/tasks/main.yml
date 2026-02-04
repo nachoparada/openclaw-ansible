@@ -37,6 +37,6 @@
 
 - name: Include start gateway tasks
   ansible.builtin.include_tasks: openclaw-start-gateway.yml
-  
+
 - name: Include health check tasks
   ansible.builtin.include_tasks: health-check.yml
