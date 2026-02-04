@@ -1,0 +1,30 @@
+# Ansible task
+- name: Create agent directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ openclaw_user }}"
+    group: "{{ openclaw_user }}"
+    mode: '0700'
+  loop:
+    - "{{ openclaw_config_dir }}/agents/main/agent"
+    - "{{ openclaw_config_dir }}/agents/main/sessions"
+
+- name: Seed auth profiles (Anthropic token)
+  ansible.builtin.copy:
+    dest: "{{ openclaw_config_dir }}/agents/main/agent/auth-profiles.json"
+    owner: "{{ openclaw_user }}"
+    group: "{{ openclaw_user }}"
+    mode: '0600'
+    force: false
+    content: |
+      {
+        "anthropic:default": {
+          "provider": "anthropic",
+          "mode": "token",
+          "token": "{{ openclaw_anthropic_token }}",
+          "createdAt": "{{ ansible_date_time.iso8601 }}"
+        }
+      }
+  when: openclaw_anthropic_token is defined
+  no_log: true

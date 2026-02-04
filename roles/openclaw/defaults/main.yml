@@ -83,3 +83,8 @@ timezone: "UTC"
 #     - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx user@host"
 #     - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDxxxxxxxxxxxxxxxxxxxxxxx user@host"
 openclaw_ssh_keys: []
+
+
+# group_vars/all.yml or host_vars
+openclaw_anthropic_token: "{{ vault_openclaw_anthropic_token }}"  # From claude setup-token
+openclaw_default_model: "anthropic/claude-opus-4-5"

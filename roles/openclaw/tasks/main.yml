@@ -28,3 +28,6 @@
 
 - name: Build OpenClaw sandbox Docker images
   ansible.builtin.include_tasks: docker-sandbox-images.yml
+
+- name: Include model auth setup tasks
+  ansible.builtin.include_tasks: model-auth-setup.yml
