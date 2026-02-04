@@ -1,0 +1,32 @@
+---
+# Linux-specific sandbox image builds.
+
+- name: Check Docker availability for sandbox builds (Linux)
+  ansible.builtin.command: docker info
+  register: docker_info
+  changed_when: false
+  failed_when: false
+
+- name: Build base sandbox image (Linux)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0
+
+- name: Build sandbox browser image (Linux)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-browser-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0
+
+- name: Build sandbox common image (Linux)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-common-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0

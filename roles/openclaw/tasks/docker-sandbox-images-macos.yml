@@ -1,0 +1,39 @@
+---
+# macOS-specific sandbox image builds.
+
+- name: Check Docker availability for sandbox builds (macOS)
+  ansible.builtin.command: docker info
+  register: docker_info
+  changed_when: false
+  failed_when: false
+
+- name: Display Docker Desktop requirement (macOS)
+  ansible.builtin.debug:
+    msg: |
+      ⚠️  Docker Desktop must be running to build sandbox images.
+      Start Docker Desktop, then re-run the playbook to build images.
+  when: docker_info.rc != 0
+
+- name: Build base sandbox image (macOS)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0
+
+- name: Build sandbox browser image (macOS)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-browser-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0
+
+- name: Build sandbox common image (macOS)
+  ansible.builtin.shell:
+    cmd: bash scripts/sandbox-common-setup.sh
+    chdir: "{{ playbook_dir }}/docker"
+    executable: /bin/bash
+  changed_when: true
+  when: docker_info.rc == 0

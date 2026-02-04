@@ -25,3 +25,6 @@
   when:
     - ansible_os_family == 'Debian'
     - openclaw_ssh_hardening_enabled | bool
+
+- name: Build OpenClaw sandbox Docker images
+  ansible.builtin.include_tasks: docker-sandbox-images.yml

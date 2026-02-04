@@ -99,9 +99,12 @@
       {
         "gateway": {
           "mode": "{{ openclaw_gateway_mode }}",
-          "bind": "{{ '127.0.0.1' if openclaw_gateway_bind == 'loopback' else '0.0.0.0' }}",
+          "bind": "{{ 'loopback' if openclaw_gateway_bind == 'loopback' else 'all' }}",
           "port": {{ openclaw_gateway_port }},
-          "token": "{{ openclaw_gateway_token }}",
+          "auth": {
+            "mode": "token",
+            "token": "{{ openclaw_gateway_token }}"
+          },
           "tailscale": {
             "mode": "{{ openclaw_gateway_tailscale_mode }}"
           }

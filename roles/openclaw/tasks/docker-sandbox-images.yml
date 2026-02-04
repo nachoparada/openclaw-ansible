@@ -1,0 +1,10 @@
+---
+# Main sandbox image orchestration - delegates to OS-specific tasks
+
+- name: Include Linux sandbox image builds
+  ansible.builtin.include_tasks: docker-sandbox-images-linux.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Include macOS sandbox image builds
+  ansible.builtin.include_tasks: docker-sandbox-images-macos.yml
+  when: ansible_os_family == 'Darwin'

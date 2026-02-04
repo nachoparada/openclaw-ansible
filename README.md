@@ -13,6 +13,7 @@ Automated, hardened installation of [OpenClaw](https://github.com/openclaw/openc
 - 🔐 **Tailscale VPN**: Secure remote access without exposing services
 - 🍺 **Homebrew**: Package manager for both Linux and macOS
 - 🐳 **Docker**: Docker CE (Linux) / Docker Desktop (macOS)
+- 🧰 **Sandbox images**: Builds OpenClaw sandbox images when Docker is available
 - 🛡️ **Multi-OS Support**: Debian, Ubuntu, and macOS
 - 🚀 **One-command install**: Complete setup in minutes
 - 🔧 **Auto-configuration**: DBus, systemd, environment setup
@@ -63,6 +64,7 @@ cd openclaw-ansible
 - Tailscale (mesh VPN)
 - UFW firewall (SSH + Tailscale ports only)
 - Docker CE + Compose V2 (for sandboxes)
+- OpenClaw sandbox images (base, browser, common) when Docker is running
 - Node.js 22.x + pnpm
 - OpenClaw on host (not containerized)
 - Systemd service (auto-start)
@@ -167,6 +169,7 @@ Verify: `nmap -p- YOUR_SERVER_IP` should show only port 22 open.
 - Homebrew will be installed automatically
 - Admin/sudo access
 - Internet connection
+- Docker Desktop must be running to build sandbox images
 
 ## What Gets Installed
 
