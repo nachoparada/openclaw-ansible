@@ -31,3 +31,6 @@
 
 - name: Include model auth setup tasks
   ansible.builtin.include_tasks: model-auth-setup.yml
+
+- name: Include workspace setup tasks
+  ansible.builtin.include_tasks: workspace_setup.yml
