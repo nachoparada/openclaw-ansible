@@ -72,7 +72,6 @@
     insertafter: EOF
 
 # NOTE: We do NOT create config.yml here - openclaw onboard/configure will do that
-# We also do NOT install the systemd service - openclaw onboard --install-daemon will do that
 # The .openclaw directory structure is created above, but config and gateway are user-initiated
 
 # Generate gateway token if not provided
@@ -164,57 +163,3 @@
   when: openclaw_start_gateway | bool and ansible_os_family == 'Debian'
   register: gateway_install
   changed_when: gateway_install.rc == 0
-
-- name: Start openclaw gateway service (Linux)
-  ansible.builtin.shell:
-    cmd: openclaw gateway start
-    executable: /bin/bash
-  environment:
-    PATH: "{{ openclaw_path }}"
-    HOME: "{{ openclaw_home }}"
-    XDG_RUNTIME_DIR: "/run/user/{{ openclaw_uid_value | default(ansible_user_uid) }}"
-  become: true
-  become_user: "{{ openclaw_user }}"
-  when: openclaw_start_gateway | bool and ansible_os_family == 'Debian' and gateway_install is succeeded
-  register: gateway_start
-  changed_when: gateway_start.rc == 0
-  failed_when: false  # Don't fail if gateway start has issues (may need channel config)
-
-- name: Display gateway status
-  ansible.builtin.debug:
-    msg: "OpenClaw gateway installed and started"
-  when: openclaw_start_gateway | bool and ansible_os_family == 'Debian' and gateway_install is succeeded
-
-- name: Display configuration note (gateway started)
-  ansible.builtin.debug:
-    msg: |
-      OpenClaw is installed and gateway is running.
-
-      Next steps (run as openclaw user):
-      1. Switch user: sudo su - openclaw
-      2. Run onboarding: openclaw onboard
-
-      This will:
-      - Guide you through channel setup
-      - Configure your messaging channels
-
-      Gateway commands:
-      - openclaw gateway status
-      - openclaw gateway restart
-      - openclaw logs
-  when: openclaw_start_gateway | bool and ansible_os_family == 'Debian'
-
-- name: Display configuration note (manual setup)
-  ansible.builtin.debug:
-    msg: |
-      OpenClaw is installed but NOT configured yet.
-
-      Next steps (run as openclaw user):
-      1. Switch user: sudo su - openclaw
-      2. Run onboarding: openclaw onboard --install-daemon
-
-      This will:
-      - Create configuration files (~/.openclaw/openclaw.json)
-      - Guide you through channel setup
-      - Install and start the gateway service automatically
-  when: not (openclaw_start_gateway | bool and ansible_os_family == 'Debian')

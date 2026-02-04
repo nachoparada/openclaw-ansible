@@ -18,7 +18,7 @@
   ansible.builtin.include_tasks: nodejs.yml
 
 - name: Include OpenClaw setup tasks
-  ansible.builtin.include_tasks: openclaw.yml
+  ansible.builtin.include_tasks: openclaw-install.yml
 
 - name: Include SSH hardening tasks (Linux only)
   ansible.builtin.include_tasks: ssh-hardening.yml
@@ -35,5 +35,8 @@
 - name: Include workspace setup tasks
   ansible.builtin.include_tasks: workspace_setup.yml
 
+- name: Include start gateway tasks
+  ansible.builtin.include_tasks: openclaw-start-gateway.yml
+  
 - name: Include health check tasks
   ansible.builtin.include_tasks: health-check.yml
